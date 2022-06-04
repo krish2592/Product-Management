@@ -1,3 +1,4 @@
+require("dotenv").config()
 const express = require('express');
 const multer = require('multer')
 const route = require('./routes/route.js');
@@ -8,7 +9,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(multer().any())
 
-mongoose.connect("mongodb+srv://Laxmi_Dobhal:MPY5xYd5tUMu48w2@cluster0.su5lt.mongodb.net/group3Database", {
+mongoose.connect(process.env.CONNECTION_STRING_MDB, {
     useNewUrlParser: true
 })
     .then(() => console.log("MongoDb is connected"))
