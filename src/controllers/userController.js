@@ -227,7 +227,7 @@ const getUserData = async function (req, res) {
     }
 
     const findUserDetails = await userModel.findOne({ _id: userId }).select({ address: 1, _id: 1, fname: 1, lname: 1, email: 1, profileImage: 1, phone: 1, password: 1, createdAt: 1, updatedAt: 1, __v: 1 });
-    console.log(typeof findUserDetails)
+  
     if (!findUserDetails) {
       return res.status(404).send({ status: false, message: "user not found" });
     }
@@ -267,7 +267,7 @@ const updateUserById = async function (req, res) {
     if (!data.fname && !data.lname && !data.email && !req.files && !data.phone && !data.password && !data.address) {
       return res.status(400).send({ status: false, message: "Please Provide data to update" })
     }
-
+    
     if (data.fname) {
       findUserDetails.fname = data.fname
       if (!validateFeild(findUserDetails.fname)) {
@@ -321,10 +321,11 @@ const updateUserById = async function (req, res) {
       findUserDetails.password = bcrypt.hashSync(data.password, 10);
 
     }
-
-    data.address = JSON.parse(data.address)
-
+    
     if (data.address) {
+
+      data.address = JSON.parse(data.address)
+
       if (data.address.shipping) {
         if (data.address.shipping.street) {
           findUserDetails.address.shipping.street = data.address.shipping.street

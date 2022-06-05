@@ -125,7 +125,7 @@ const createProduct = async (req, res) => {
 const getProduct = async function (req, res) {
 
   try {
-    
+
     let reqParams = req.query
     let priceSort = req.query.priceSort
 
@@ -159,7 +159,7 @@ const getProduct = async function (req, res) {
 
       if (name == "" || name) {
         if (!isValid(name)) return res.status(400).send({ status: false, message: "Not a valid name" })
-        filter["title"] = {$regex:name.toUpperCase()};
+        filter["title"] = { $regex: name.toUpperCase() };
       }
 
       if (priceGreaterThan == "" || (priceGreaterThan && !priceLessThan)) {
@@ -212,9 +212,17 @@ const updateProduct = async function (req, res) {
   try {
 
     const productId = req.params.productId
-    if (!isValidBody(req.body)) {
-      return res.status(400).send({ status: false, message: "Data must be given" })
+    let files;
+    if (req.files) {
+      files = req.files
+    } else if (!req.files) {
+
+      if (!isValidBody(req.body)) {
+        return res.status(400).send({ status: false, message: "Data must be given" })
+      }
+
     }
+
     let data = JSON.parse(JSON.stringify(req.body))
 
     if (!isValidObjectId(productId)) {
@@ -244,7 +252,7 @@ const updateProduct = async function (req, res) {
       return res.status(400).send({ status: false, message: "title must be unique" })
     }
 
-    if (description == "" || description || description == 0) {
+    if (description == "" || description) {
       if (!isValid(description)) {
         return res.status(400).send({ status: false, message: "Not  valid description " })
       }
@@ -254,19 +262,19 @@ const updateProduct = async function (req, res) {
         return res.status(400).send({ status: false, message: "Not valid price" })
     }
 
-    if (currencyId == "" || currencyId || currencyId == 0) {
+    if (currencyId == "" || currencyId) {
       if (!isValidCurrency(currencyId)) {
         return res.status(400).send({ status: false, message: "currencyId should be  INR" })
       }
     }
 
-    if (currencyFormat == "" || currencyFormat || currencyFormat == 0) {
+    if (currencyFormat == "" || currencyFormat) {
       if (!isValidCurrencyFormat(currencyFormat)) {
         return res.status(400).send({ status: false, message: "Not  a valid currency format" })
       }
     }
 
-    if (availableSizes == "" || availableSizes || availableSizes == 0) {
+    if (availableSizes == "" || availableSizes) {
 
       if (!isValidSize(availableSizes)) {
         return res.status(400).send({ status: false, message: "Available Sizes should be from ['S', 'XS', 'M', 'X', 'L', 'XXL', 'XL']" })
@@ -281,14 +289,13 @@ const updateProduct = async function (req, res) {
         return res.status(400).send({ status: false, message: "Not valid installments" })
     }
 
-    if (style == "" || style || style == 0) {
+    if (style == "" || style) {
       if (!isValid(style)) {
         return res.status(400).send({ status: false, message: "Not valid style" })
       }
     }
 
-    if (isFreeShipping == "" || isFreeShipping || isFreeShipping == 0) {
-      console.log(isFreeShipping)
+    if (isFreeShipping == "" || isFreeShipping) {
       if (!isValidBoolean(isFreeShipping)) {
         return res.status(400).send({ status: false, message: "FreeShipping should be (true or false)" })
       }
@@ -296,7 +303,6 @@ const updateProduct = async function (req, res) {
 
     let uploadedFileURL
     if (req.files) {
-      let files = req.files
       if (files && files.length > 0) {
         let check = isFileImage(files[0])
         if (!check) return res.status(400).send({ status: false, message: 'Invalid file, image only allowed' })

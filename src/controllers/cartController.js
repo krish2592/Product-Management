@@ -46,7 +46,7 @@ const createCart = async function (req, res) {
 
         if (quantity) {
 
-            if (!isInteger(quantity) || quantity < 1) return res.status(400).send({ status: false, message: "Quantity should not be Positive Number" })
+            if (!isInteger(quantity) || quantity < 1) return res.status(400).send({ status: false, message: "Quantity should not be negative and fractional number" })
 
         } else if (!quantity) {
 
@@ -153,7 +153,6 @@ const updateCart = async function (req, res) {
 
                     if (productQuantity >= 1) {
                         totalItems = totalItems - 1
-                        console.log(totalItems)
                         totalPrice = totalPrice - (productQuantity * productPrice)
 
                         const updateCart = await cartModel.findOneAndUpdate({ _id: cartId }, { $pull: { items: { productId: productId, quantity: productQuantity } }, $set: { totalPrice: totalPrice, totalItems: totalItems } }, { new: true })
