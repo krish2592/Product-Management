@@ -19,7 +19,7 @@ let uploadFile = async (file, dirName) => {
 
     var uploadParams = {
       ACL: process.env.AWS_ACL,
-      Bucket: process.env.ACCESS_KEY_ID,  //HERE
+      Bucket: process.env.BUCKET_NAME,  //HERE
       Key: `${dirName}/` + file.originalname, //HERE
       Body: file.buffer
     }
